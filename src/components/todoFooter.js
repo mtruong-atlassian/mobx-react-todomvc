@@ -1,7 +1,7 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import {pluralize} from '../utils';
-import { ALL_TODOS, ACTIVE_TODOS, COMPLETED_TODOS } from '../constants';
+import { ALL_TODOS, ACTIVE_TODOS, COMPLETED_TODOS, PRINT_TODOS } from '../constants';
 
 @observer
 export default class TodoFooter extends React.Component {
@@ -21,6 +21,7 @@ export default class TodoFooter extends React.Component {
 					{this.renderFilterLink(ALL_TODOS, "", "All")}
 					{this.renderFilterLink(ACTIVE_TODOS, "active", "Active")}
 					{this.renderFilterLink(COMPLETED_TODOS, "completed", "Completed")}
+          {this.renderRedirectLink(PRINT_TODOS, "PRINT")}
 				</ul>
 				{ todoStore.completedCount === 0
 					? null
@@ -44,6 +45,15 @@ export default class TodoFooter extends React.Component {
 		</li>)
 	}
 
+  renderRedirectLink(url, caption) {
+    return (<li>
+      <a href={url} target="_blank">
+        {caption}
+      </a>
+      {' '}
+    </li>)
+  }
+
 	clearCompleted = () => {
 		this.props.todoStore.clearCompleted();
 	};
@@ -52,4 +62,4 @@ export default class TodoFooter extends React.Component {
 TodoFooter.propTypes = {
 	viewStore: React.PropTypes.object.isRequired,
 	todoStore: React.PropTypes.object.isRequired
-}
+};

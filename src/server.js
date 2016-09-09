@@ -7,6 +7,7 @@ import { renderToString } from 'react-dom/server'
 import TodoStore from '../src/stores/TodoStore';
 import ViewStore from '../src/stores/ViewStore';
 import TodoApp from '../src/components/todoApp.js';
+import TodoPrint from '../src/components/todoPrint.js';
 import React from 'react';
 
 const app = express();
@@ -46,6 +47,26 @@ const renderFullPage = html => {
 	`
 };
 
+const renderPrintPage = html => {
+  const initialState = { todos };
+  return `
+	<!doctype html>
+	<html lang="utf-8">
+		<head>
+			<link rel="stylesheet" href="/node_modules/todomvc-common/base.css">
+			<link rel="stylesheet" href="/node_modules/todomvc-app-css/index.css">
+			<script>
+				window.initialState = ${JSON.stringify(initialState)}
+			</script>
+		</head>
+		<body>
+			<section id="todoprint" class="todoprint">${html}</section>
+			<script src="/static/bundle.js"></script>
+		</body>
+	</html>
+	`
+};
+
 let todos = []; // Todos are stored here
 
 app.use(bodyParser.json());
@@ -61,6 +82,18 @@ app.get('/', function(req, res) {
 	const page = renderFullPage(initView);
 
 	res.status(200).send(page);
+});
+
+app.get('/print', function(req, res) {
+  const todoStore = TodoStore.fromJS(todos);
+  const viewStore = new ViewStore();
+
+  const initView = renderToString((
+    <TodoPrint todoStore={todoStore} viewStore={viewStore} />
+  ));
+
+  const page = renderPrintPage(initView);
+  res.status(200).send(page);
 });
 
 app.post('/api/todos', function(req, res) {

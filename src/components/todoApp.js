@@ -5,7 +5,7 @@ import {Router} from 'director';
 import TodoEntry from './todoEntry';
 import TodoOverview from './todoOverview';
 import TodoFooter from './todoFooter';
-import { ALL_TODOS, ACTIVE_TODOS, COMPLETED_TODOS } from '../constants';
+import { ALL_TODOS, ACTIVE_TODOS, COMPLETED_TODOS, PRINT_TODOS } from '../constants';
 
 import DevTool from 'mobx-react-devtools';
 
